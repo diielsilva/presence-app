@@ -20,7 +20,7 @@ class SchoolClassStoreImpl extends SchoolClassStore {
     value = LoadingState();
     try {
       await _repository.saveSchoolClass();
-      value = StoredState(message: "Turma cadastrada com sucesso.");
+      findAllSchoolClasses();
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
@@ -53,7 +53,7 @@ class SchoolClassStoreImpl extends SchoolClassStore {
         await _repository.deleteStudent(student: student.id!);
       }
       await _repository.deleteSchoolClass(schoolClass: schoolClass);
-      value = StoredState(message: "Turma removida com sucesso.");
+      findAllSchoolClasses();
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
