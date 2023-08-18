@@ -21,7 +21,6 @@ class SchoolClassStoreImpl extends SchoolClassStore {
     try {
       await _repository.saveSchoolClass();
       value = StoredState(message: "Turma cadastrada com sucesso.");
-      _delayToDisplayMessage();
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
@@ -55,7 +54,6 @@ class SchoolClassStoreImpl extends SchoolClassStore {
       }
       await _repository.deleteSchoolClass(schoolClass: schoolClass);
       value = StoredState(message: "Turma removida com sucesso.");
-      _delayToDisplayMessage();
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
@@ -82,14 +80,5 @@ class SchoolClassStoreImpl extends SchoolClassStore {
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
-  }
-
-  Future<void> _delayToDisplayMessage() async {
-    await Future.delayed(
-      Duration(
-        milliseconds: ConstantsUtil.delayDuration,
-      ),
-      () => findAllSchoolClasses(),
-    );
   }
 }

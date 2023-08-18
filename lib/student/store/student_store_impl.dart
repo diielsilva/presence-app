@@ -19,7 +19,6 @@ class StudentStoreImpl extends StudentStore {
     value = LoadingState();
     try {
       student = await _repository.saveStudent(student: student);
-      _refreshAfterDisplayMessage(schoolClass: student.schoolClass!);
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
@@ -42,7 +41,6 @@ class StudentStoreImpl extends StudentStore {
     value = LoadingState();
     try {
       await _repository.updateStudent(student: student);
-      _refreshAfterDisplayMessage(schoolClass: student.schoolClass!);
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
@@ -55,16 +53,8 @@ class StudentStoreImpl extends StudentStore {
     try {
       await _repository.deletePresencesByStudent(student: student);
       await _repository.deleteStudent(student: student);
-      _refreshAfterDisplayMessage(schoolClass: schoolClass);
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
-  }
-
-  Future<void> _refreshAfterDisplayMessage({required int schoolClass}) async {
-    await Future.delayed(
-      Duration(microseconds: ConstantsUtil.delayDuration),
-      () => findAllStudentsBySchoolClass(schoolClass: schoolClass),
-    );
   }
 }
