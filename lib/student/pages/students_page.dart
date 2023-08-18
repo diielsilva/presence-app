@@ -20,15 +20,6 @@ class _StudentsPageState extends State<StudentsPage> {
   late final StudentStore _store;
   Student _student = Student.empty();
 
-  void _onInit() {
-    _store = widget.store;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _schoolClass = ModalRoute.of(context)!.settings.arguments as int;
-      _store.findAllStudentsBySchoolClass(schoolClass: _schoolClass);
-      _student.schoolClass = _schoolClass;
-    });
-  }
-
   void _handleOptionButton({required int option, required int student}) {
     switch (option) {
       case 0:
@@ -39,7 +30,7 @@ class _StudentsPageState extends State<StudentsPage> {
             onSubmit: () => _store.updateStudent(student: _student));
         break;
       case 1:
-        _store.deleteStudent(student: student);
+        _store.deleteStudent(student: student, schoolClass: _schoolClass);
         break;
     }
   }
@@ -118,7 +109,12 @@ class _StudentsPageState extends State<StudentsPage> {
   @override
   void initState() {
     super.initState();
-    _onInit();
+    _store = widget.store;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _schoolClass = ModalRoute.of(context)!.settings.arguments as int;
+      _store.findAllStudentsBySchoolClass(schoolClass: _schoolClass);
+      _student.schoolClass = _schoolClass;
+    });
   }
 
   @override
@@ -132,21 +128,13 @@ class _StudentsPageState extends State<StudentsPage> {
             return const LoadingComponent();
           }
 
-          if (state is StoredState) {
-            return _alert(
-              message: state.message,
-              icon: Icons.check_circle,
-              alertType: AlertType.success,
-            );
-          }
-
           if (state is LoadedState) {
             final List<Student> students = state.models as List<Student>;
 
             return students.isEmpty
                 ? _alert(
                     message: "Não existem alunos cadastrados.",
-                    icon: Icons.school,
+                    icon: Icons.person,
                     alertType: AlertType.standard,
                   )
                 : ListView.builder(

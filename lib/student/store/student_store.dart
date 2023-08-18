@@ -14,5 +14,5 @@ abstract class StudentStore extends ValueNotifier<AppState> {
 
   Future<void> updateStudent({required Student student});
 
-  Future<void> deleteStudent({required int student});
+  Future<void> deleteStudent({required int student, required int schoolClass});
 }

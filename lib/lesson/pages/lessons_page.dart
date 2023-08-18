@@ -37,7 +37,7 @@ class _LessonsPageState extends State<LessonsPage> {
         _displayDTOS(lesson: lesson);
         break;
       case 1:
-        _store.deleteLesson(lesson: lesson);
+        _store.deleteLesson(lesson: lesson, schoolClass: _schoolClass);
         break;
     }
   }
@@ -135,21 +135,13 @@ class _LessonsPageState extends State<LessonsPage> {
             return const LoadingComponent();
           }
 
-          if (state is StoredState) {
-            return _alert(
-              message: state.message,
-              icon: Icons.check_circle,
-              alertType: AlertType.success,
-            );
-          }
-
           if (state is LoadedState) {
             final List<Lesson> lessons = state.models as List<Lesson>;
 
             return lessons.isEmpty
                 ? _alert(
                     message: "Não existem aulas cadastradas.",
-                    icon: Icons.play_lesson,
+                    icon: Icons.school_rounded,
                     alertType: AlertType.standard,
                   )
                 : ListView.builder(

@@ -7,7 +7,7 @@ import 'package:final_presence_app/shared/models/school_class.dart';
 import 'package:final_presence_app/shared/models/student.dart';
 import 'package:final_presence_app/shared/repositories/repository.dart';
 import 'package:final_presence_app/shared/states/app_state.dart';
-import 'package:final_presence_app/shared/utils/message_util.dart';
+import 'package:final_presence_app/shared/utils/constants_util.dart';
 
 class SchoolClassStoreImpl extends SchoolClassStore {
   final Repository _repository;
@@ -19,13 +19,10 @@ class SchoolClassStoreImpl extends SchoolClassStore {
   Future<void> saveSchoolClass() async {
     value = LoadingState();
     try {
-      SchoolClass schoolClass = await _repository.saveSchoolClass();
-      schoolClass.wasSuccessfullySaved()
-          ? value = StoredState(message: "Turma cadastrada com sucesso.")
-          : value = ErrorState(message: "Não foi possível cadastrar a turma.");
-      _delayToDisplayMessage();
+      await _repository.saveSchoolClass();
+      findAllSchoolClasses();
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
@@ -36,7 +33,7 @@ class SchoolClassStoreImpl extends SchoolClassStore {
       List<SchoolClass> classes = await _repository.findAllSchoolClasses();
       value = LoadedState(models: classes);
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
@@ -56,10 +53,9 @@ class SchoolClassStoreImpl extends SchoolClassStore {
         await _repository.deleteStudent(student: student.id!);
       }
       await _repository.deleteSchoolClass(schoolClass: schoolClass);
-      value = StoredState(message: "Turma removida com sucesso.");
-      _delayToDisplayMessage();
+      findAllSchoolClasses();
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
@@ -80,19 +76,9 @@ class SchoolClassStoreImpl extends SchoolClassStore {
         dto.calculateAbsences(lessons.length);
         dtos.add(dto);
       }
-
       await _controller.generatePDF(dtos: dtos, lessons: lessons.length);
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
-  }
-
-  Future<void> _delayToDisplayMessage() async {
-    await Future.delayed(
-      const Duration(milliseconds: 100),
-      () {
-        findAllSchoolClasses();
-      },
-    );
   }
 }

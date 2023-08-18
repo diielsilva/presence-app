@@ -6,7 +6,7 @@ import 'package:final_presence_app/shared/models/student.dart';
 import 'package:final_presence_app/shared/repositories/repository.dart';
 import 'package:final_presence_app/shared/states/app_state.dart';
 import 'package:final_presence_app/shared/states/dto_state.dart';
-import 'package:final_presence_app/shared/utils/message_util.dart';
+import 'package:final_presence_app/shared/utils/constants_util.dart';
 import 'package:flutter/material.dart';
 
 class LessonStoreImpl extends LessonStore {
@@ -25,12 +25,10 @@ class LessonStoreImpl extends LessonStore {
     try {
       Lesson lesson = Lesson.allArgs(
           id: 0, date: lessonDate ?? DateTime.now(), schoolClass: schoolClass);
-      lesson = await _repository.saveLesson(lesson: lesson);
-      lesson.wasSuccessfullySaved()
-          ? value = StoredState(message: "Aula cadastrada com sucesso.")
-          : value = ErrorState(message: "Não foi possível cadastrar a aula.");
+      await _repository.saveLesson(lesson: lesson);
+      findAllLessonsBySchoolClass(schoolClass: schoolClass);
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
@@ -42,19 +40,20 @@ class LessonStoreImpl extends LessonStore {
           schoolClass: schoolClass);
       value = LoadedState(models: lessons);
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
   @override
-  Future<void> deleteLesson({required int lesson}) async {
+  Future<void> deleteLesson(
+      {required int lesson, required int schoolClass}) async {
     value = LoadingState();
     try {
       await _repository.deletePresencesByLesson(lesson: lesson);
       await _repository.deleteLesson(lesson: lesson);
-      value = StoredState(message: "Aula removida com sucesso.");
+      findAllLessonsBySchoolClass(schoolClass: schoolClass);
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
@@ -75,7 +74,7 @@ class LessonStoreImpl extends LessonStore {
           : dtoState.value =
               ErrorDTOState(message: "Não foi possível cadastrar a presença.");
     } catch (error) {
-      dtoState.value = ErrorDTOState(message: MessageUtil.message);
+      dtoState.value = ErrorDTOState(message: ConstantsUtil.message);
     }
   }
 
@@ -99,7 +98,7 @@ class LessonStoreImpl extends LessonStore {
       }
       dtoState.value = LoadedDTOState(dtos: dtos);
     } catch (error) {
-      dtoState.value = ErrorDTOState(message: MessageUtil.message);
+      dtoState.value = ErrorDTOState(message: ConstantsUtil.message);
     }
   }
 }
