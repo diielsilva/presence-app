@@ -1,7 +1,7 @@
 import 'package:final_presence_app/shared/models/student.dart';
 import 'package:final_presence_app/shared/repositories/repository.dart';
 import 'package:final_presence_app/shared/states/app_state.dart';
-import 'package:final_presence_app/shared/utils/message_util.dart';
+import 'package:final_presence_app/shared/utils/constants_util.dart';
 import 'package:final_presence_app/student/controllers/form_controller.dart';
 import 'package:final_presence_app/student/store/student_store.dart';
 
@@ -28,7 +28,7 @@ class StudentStoreImpl extends StudentStore {
         value = ErrorState(message: "O aluno fornecido é inválido.");
       }
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
@@ -40,7 +40,7 @@ class StudentStoreImpl extends StudentStore {
           schoolClass: schoolClass);
       value = LoadedState(models: students);
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
@@ -52,7 +52,7 @@ class StudentStoreImpl extends StudentStore {
       await _repository.deleteStudent(student: student);
       value = StoredState(message: "Aluno removido com sucesso.");
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
@@ -67,7 +67,7 @@ class StudentStoreImpl extends StudentStore {
         value = ErrorState(message: "O aluno fornecido é inválido.");
       }
     } catch (error) {
-      value = ErrorState(message: MessageUtil.message);
+      value = ErrorState(message: ConstantsUtil.message);
     }
   }
 }

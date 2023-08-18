@@ -35,7 +35,6 @@ class PresenceApp extends StatelessWidget {
       theme: _getTheme(brightness: Brightness.light),
       darkTheme: _getTheme(brightness: Brightness.dark),
       debugShowCheckedModeBanner: false,
-      localizationsDelegates: [],
     );
   }
 }
