@@ -2,7 +2,6 @@ import 'package:final_presence_app/shared/components/alert_component.dart';
 import 'package:final_presence_app/shared/components/insert_button_component.dart';
 import 'package:final_presence_app/shared/components/loading_component.dart';
 import 'package:final_presence_app/shared/enums/alert_type.dart';
-import 'package:final_presence_app/shared/extensions/message_extension.dart';
 import 'package:final_presence_app/shared/models/student.dart';
 import 'package:final_presence_app/shared/states/app_state.dart';
 import 'package:final_presence_app/student/store/student_store.dart';
@@ -20,15 +19,6 @@ class _StudentsPageState extends State<StudentsPage> {
   late final int _schoolClass;
   late final StudentStore _store;
   Student _student = Student.empty();
-
-  void _onInit() {
-    _store = widget.store;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _schoolClass = ModalRoute.of(context)!.settings.arguments as int;
-      _store.findAllStudentsBySchoolClass(schoolClass: _schoolClass);
-      _student.schoolClass = _schoolClass;
-    });
-  }
 
   void _handleOptionButton({required int option, required int student}) {
     switch (option) {
@@ -119,7 +109,12 @@ class _StudentsPageState extends State<StudentsPage> {
   @override
   void initState() {
     super.initState();
-    _onInit();
+    _store = widget.store;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _schoolClass = ModalRoute.of(context)!.settings.arguments as int;
+      _store.findAllStudentsBySchoolClass(schoolClass: _schoolClass);
+      _student.schoolClass = _schoolClass;
+    });
   }
 
   @override
