@@ -134,7 +134,7 @@ class _StudentsPageState extends State<StudentsPage> {
             return students.isEmpty
                 ? _alert(
                     message: "Não existem alunos cadastrados.",
-                    icon: Icons.school,
+                    icon: Icons.person,
                     alertType: AlertType.standard,
                   )
                 : ListView.builder(

@@ -141,7 +141,7 @@ class _LessonsPageState extends State<LessonsPage> {
             return lessons.isEmpty
                 ? _alert(
                     message: "Não existem aulas cadastradas.",
-                    icon: Icons.play_lesson,
+                    icon: Icons.school_rounded,
                     alertType: AlertType.standard,
                   )
                 : ListView.builder(
