@@ -3,6 +3,7 @@ import 'package:final_presence_app/shared/components/alert_component.dart';
 import 'package:final_presence_app/shared/components/insert_button_component.dart';
 import 'package:final_presence_app/shared/components/loading_component.dart';
 import 'package:final_presence_app/shared/enums/alert_type.dart';
+import 'package:final_presence_app/shared/extensions/message_extension.dart';
 import 'package:final_presence_app/shared/models/school_class.dart';
 import 'package:final_presence_app/shared/states/app_state.dart';
 import 'package:flutter/material.dart';
@@ -74,11 +75,7 @@ class _SchoolClassesPageState extends State<SchoolClassesPage> {
           }
 
           if (state is StoredState) {
-            return _alert(
-              message: state.message,
-              icon: Icons.check_circle,
-              alertType: AlertType.success,
-            );
+            context.showSuccessMessage(message: state.message);
           }
 
           if (state is LoadedState) {

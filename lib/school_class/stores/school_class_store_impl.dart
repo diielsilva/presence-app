@@ -23,6 +23,7 @@ class SchoolClassStoreImpl extends SchoolClassStore {
       schoolClass.wasSuccessfullySaved()
           ? value = StoredState(message: "Turma cadastrada com sucesso.")
           : value = ErrorState(message: "Não foi possível cadastrar a turma.");
+      _delayToDisplayMessage();
     } catch (error) {
       value = ErrorState(message: MessageUtil.message);
     }
@@ -56,6 +57,7 @@ class SchoolClassStoreImpl extends SchoolClassStore {
       }
       await _repository.deleteSchoolClass(schoolClass: schoolClass);
       value = StoredState(message: "Turma removida com sucesso.");
+      _delayToDisplayMessage();
     } catch (error) {
       value = ErrorState(message: MessageUtil.message);
     }
@@ -83,5 +85,14 @@ class SchoolClassStoreImpl extends SchoolClassStore {
     } catch (error) {
       value = ErrorState(message: MessageUtil.message);
     }
+  }
+
+  Future<void> _delayToDisplayMessage() async {
+    await Future.delayed(
+      const Duration(milliseconds: 100),
+      () {
+        findAllSchoolClasses();
+      },
+    );
   }
 }
