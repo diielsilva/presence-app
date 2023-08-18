@@ -2,6 +2,7 @@ import 'package:final_presence_app/shared/components/alert_component.dart';
 import 'package:final_presence_app/shared/components/insert_button_component.dart';
 import 'package:final_presence_app/shared/components/loading_component.dart';
 import 'package:final_presence_app/shared/enums/alert_type.dart';
+import 'package:final_presence_app/shared/extensions/message_extension.dart';
 import 'package:final_presence_app/shared/models/student.dart';
 import 'package:final_presence_app/shared/states/app_state.dart';
 import 'package:final_presence_app/student/store/student_store.dart';
@@ -39,7 +40,7 @@ class _StudentsPageState extends State<StudentsPage> {
             onSubmit: () => _store.updateStudent(student: _student));
         break;
       case 1:
-        _store.deleteStudent(student: student);
+        _store.deleteStudent(student: student, schoolClass: _schoolClass);
         break;
     }
   }
@@ -130,14 +131,6 @@ class _StudentsPageState extends State<StudentsPage> {
         builder: (context, state, child) {
           if (state is LoadingState) {
             return const LoadingComponent();
-          }
-
-          if (state is StoredState) {
-            return _alert(
-              message: state.message,
-              icon: Icons.check_circle,
-              alertType: AlertType.success,
-            );
           }
 
           if (state is LoadedState) {

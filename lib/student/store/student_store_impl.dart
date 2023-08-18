@@ -18,15 +18,8 @@ class StudentStoreImpl extends StudentStore {
   Future<void> saveStudent({required Student student}) async {
     value = LoadingState();
     try {
-      if (student.canSave()) {
-        student = await _repository.saveStudent(student: student);
-        student.wasSuccessfullySaved()
-            ? value = StoredState(message: "Aluno cadastrado com sucesso.")
-            : value =
-                ErrorState(message: "Não foi possível cadastrar o aluno.");
-      } else {
-        value = ErrorState(message: "O aluno fornecido é inválido.");
-      }
+      student = await _repository.saveStudent(student: student);
+      _refreshAfterDisplayMessage(schoolClass: student.schoolClass!);
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
@@ -45,29 +38,33 @@ class StudentStoreImpl extends StudentStore {
   }
 
   @override
-  Future<void> deleteStudent({required int student}) async {
+  Future<void> updateStudent({required Student student}) async {
     value = LoadingState();
     try {
-      await _repository.deletePresencesByStudent(student: student);
-      await _repository.deleteStudent(student: student);
-      value = StoredState(message: "Aluno removido com sucesso.");
+      await _repository.updateStudent(student: student);
+      _refreshAfterDisplayMessage(schoolClass: student.schoolClass!);
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
   }
 
   @override
-  Future<void> updateStudent({required Student student}) async {
+  Future<void> deleteStudent(
+      {required int student, required int schoolClass}) async {
     value = LoadingState();
     try {
-      if (student.canSave()) {
-        await _repository.updateStudent(student: student);
-        value = StoredState(message: "Aluno alterado com sucesso.");
-      } else {
-        value = ErrorState(message: "O aluno fornecido é inválido.");
-      }
+      await _repository.deletePresencesByStudent(student: student);
+      await _repository.deleteStudent(student: student);
+      _refreshAfterDisplayMessage(schoolClass: schoolClass);
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
+  }
+
+  Future<void> _refreshAfterDisplayMessage({required int schoolClass}) async {
+    await Future.delayed(
+      Duration(microseconds: ConstantsUtil.delayDuration),
+      () => findAllStudentsBySchoolClass(schoolClass: schoolClass),
+    );
   }
 }
