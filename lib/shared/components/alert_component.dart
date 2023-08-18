@@ -21,8 +21,6 @@ class AlertComponent extends StatelessWidget {
     switch (alertType) {
       case AlertType.error:
         return Colors.red;
-      case AlertType.success:
-        return Colors.green;
       case AlertType.standard:
         return const Color.fromARGB(249, 236, 102, 154);
     }
