@@ -37,7 +37,7 @@ class _LessonsPageState extends State<LessonsPage> {
         _displayDTOS(lesson: lesson);
         break;
       case 1:
-        _store.deleteLesson(lesson: lesson);
+        _store.deleteLesson(lesson: lesson, schoolClass: _schoolClass);
         break;
     }
   }
@@ -133,14 +133,6 @@ class _LessonsPageState extends State<LessonsPage> {
         builder: (context, state, child) {
           if (state is LoadingState) {
             return const LoadingComponent();
-          }
-
-          if (state is StoredState) {
-            return _alert(
-              message: state.message,
-              icon: Icons.check_circle,
-              alertType: AlertType.success,
-            );
           }
 
           if (state is LoadedState) {

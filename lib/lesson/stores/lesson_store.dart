@@ -11,7 +11,7 @@ abstract class LessonStore extends ValueNotifier<AppState> {
 
   Future<void> findAllLessonsBySchoolClass({required int schoolClass});
 
-  Future<void> deleteLesson({required int lesson});
+  Future<void> deleteLesson({required int lesson, required int schoolClass});
 
   Future<void> savePresence({
     required int student,

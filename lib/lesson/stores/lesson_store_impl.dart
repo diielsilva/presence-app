@@ -25,10 +25,8 @@ class LessonStoreImpl extends LessonStore {
     try {
       Lesson lesson = Lesson.allArgs(
           id: 0, date: lessonDate ?? DateTime.now(), schoolClass: schoolClass);
-      lesson = await _repository.saveLesson(lesson: lesson);
-      lesson.wasSuccessfullySaved()
-          ? value = StoredState(message: "Aula cadastrada com sucesso.")
-          : value = ErrorState(message: "Não foi possível cadastrar a aula.");
+      await _repository.saveLesson(lesson: lesson);
+      findAllLessonsBySchoolClass(schoolClass: schoolClass);
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
@@ -47,12 +45,13 @@ class LessonStoreImpl extends LessonStore {
   }
 
   @override
-  Future<void> deleteLesson({required int lesson}) async {
+  Future<void> deleteLesson(
+      {required int lesson, required int schoolClass}) async {
     value = LoadingState();
     try {
       await _repository.deletePresencesByLesson(lesson: lesson);
       await _repository.deleteLesson(lesson: lesson);
-      value = StoredState(message: "Aula removida com sucesso.");
+      findAllLessonsBySchoolClass(schoolClass: schoolClass);
     } catch (error) {
       value = ErrorState(message: ConstantsUtil.message);
     }
