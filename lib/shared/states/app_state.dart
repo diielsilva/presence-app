@@ -10,12 +10,6 @@ class LoadedState implements AppState {
   LoadedState({required this.models});
 }
 
-class StoredState implements AppState {
-  final String message;
-
-  StoredState({required this.message});
-}
-
 class ErrorState implements AppState {
   final String message;
 
