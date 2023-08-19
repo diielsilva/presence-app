@@ -19,6 +19,12 @@ abstract class LessonStore extends ValueNotifier<AppState> {
     required int schoolClass,
   });
 
-  Future<void> findAllPresencesByLessonAndSchoolClass(
+  Future<void> findAllAbsencesByLesson(
       {required int lesson, required int schoolClass});
+
+  Future<void> findAllPresencesByLesson(
+      {required int lesson, required int schoolClass});
+
+  Future<void> deletePresence(
+      {required int student, required int lesson, required int schoolClass});
 }

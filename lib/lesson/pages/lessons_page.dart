@@ -34,9 +34,13 @@ class _LessonsPageState extends State<LessonsPage> {
   void _handleOptionButton({required int option, required int lesson}) {
     switch (option) {
       case 0:
-        _displayDTOS(lesson: lesson);
+        _displayDTOS(
+            lesson: lesson, isPresences: false, title: "Atribuir Presenças");
         break;
       case 1:
+        _displayDTOS(
+            lesson: lesson, isPresences: true, title: "Alunos Presentes");
+      case 2:
         _store.deleteLesson(lesson: lesson, schoolClass: _schoolClass);
         break;
     }
@@ -56,15 +60,21 @@ class _LessonsPageState extends State<LessonsPage> {
     );
   }
 
-  Future<void> _displayDTOS({required int lesson}) async {
-    _store.findAllPresencesByLessonAndSchoolClass(
-        lesson: lesson, schoolClass: _schoolClass);
+  Future<void> _displayDTOS(
+      {required int lesson,
+      required bool isPresences,
+      required String title}) async {
+    isPresences
+        ? _store.findAllPresencesByLesson(
+            lesson: lesson, schoolClass: _schoolClass)
+        : _store.findAllAbsencesByLesson(
+            lesson: lesson, schoolClass: _schoolClass);
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Atribuir Presenças"),
+          title: Text(title),
           content: SizedBox(
             width: 500,
             height: 300,
@@ -80,9 +90,11 @@ class _LessonsPageState extends State<LessonsPage> {
                       state.dtos as List<PresenceDTO>;
 
                   return dtos.isEmpty
-                      ? const Center(
+                      ? Center(
                           child: Text(
-                            "Todos os alunos estão presentes ou não existem alunos cadastrados.",
+                            isPresences
+                                ? "Todos os alunos estão faltando ou não existem alunos cadastrados."
+                                : "Todos os alunos estão presentes ou não existem alunos cadastrados.",
                           ),
                         )
                       : ListView.builder(
@@ -94,15 +106,27 @@ class _LessonsPageState extends State<LessonsPage> {
                             return ListTile(
                               title: Text(dto.name!),
                               trailing: IconButton(
-                                icon: const Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                ),
-                                onPressed: () => _store.savePresence(
-                                  student: dto.student!,
-                                  lesson: dto.lesson!,
-                                  schoolClass: _schoolClass,
-                                ),
+                                icon: isPresences
+                                    ? const Icon(
+                                        Icons.remove_circle,
+                                        color: Colors.red,
+                                      )
+                                    : const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                      ),
+                                onPressed: () {
+                                  isPresences
+                                      ? _store.deletePresence(
+                                          student: dto.student!,
+                                          lesson: dto.lesson!,
+                                          schoolClass: _schoolClass)
+                                      : _store.savePresence(
+                                          student: dto.student!,
+                                          lesson: dto.lesson!,
+                                          schoolClass: _schoolClass,
+                                        );
+                                },
                               ),
                             );
                           },
@@ -162,6 +186,10 @@ class _LessonsPageState extends State<LessonsPage> {
                             ),
                             const PopupMenuItem(
                               value: 1,
+                              child: Text("Ver Presenças"),
+                            ),
+                            const PopupMenuItem(
+                              value: 2,
                               child: Text("Remover"),
                             )
                           ],

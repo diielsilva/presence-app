@@ -14,7 +14,11 @@ class PresenceDTO implements DTO {
     required this.lesson,
   });
 
-  bool canInsertIntoList({required List<Presence> presence}) {
+  bool canInsertIntoAbsencesList({required List<Presence> presence}) {
     return presence.isEmpty;
+  }
+
+  bool canInsertIntoPresencesList({required List<Presence> presence}) {
+    return presence.isNotEmpty;
   }
 }

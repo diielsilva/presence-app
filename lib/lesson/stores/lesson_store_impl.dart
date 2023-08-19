@@ -69,8 +69,7 @@ class LessonStoreImpl extends LessonStore {
           Presence.allArgs(id: 0, student: student, lesson: lesson);
       presence = await _repository.savePresence(presence: presence);
       presence.wasSuccessfullySaved()
-          ? findAllPresencesByLessonAndSchoolClass(
-              lesson: lesson, schoolClass: schoolClass)
+          ? findAllAbsencesByLesson(lesson: lesson, schoolClass: schoolClass)
           : dtoState.value =
               ErrorDTOState(message: "Não foi possível cadastrar a presença.");
     } catch (error) {
@@ -79,7 +78,7 @@ class LessonStoreImpl extends LessonStore {
   }
 
   @override
-  Future<void> findAllPresencesByLessonAndSchoolClass(
+  Future<void> findAllAbsencesByLesson(
       {required int lesson, required int schoolClass}) async {
     dtoState.value = LoadingDTOState();
     try {
@@ -91,12 +90,53 @@ class LessonStoreImpl extends LessonStore {
         List<Presence> presences =
             await _repository.findAllPresencesByStudentAndLesson(
                 student: student.id!, lesson: lesson);
-        dto.canInsertIntoList(presence: presences)
+        dto.canInsertIntoAbsencesList(presence: presences)
             ? dtos.add(PresenceDTO.allArgs(
                 name: student.name, student: student.id, lesson: lesson))
             : null;
       }
       dtoState.value = LoadedDTOState(dtos: dtos);
+    } catch (error) {
+      dtoState.value = ErrorDTOState(message: ConstantsUtil.message);
+    }
+  }
+
+  @override
+  Future<void> findAllPresencesByLesson(
+      {required int lesson, required int schoolClass}) async {
+    dtoState.value = LoadingDTOState();
+    try {
+      List<PresenceDTO> dtos = [];
+      List<Student> students = await _repository.findAllStudentsBySchoolClass(
+          schoolClass: schoolClass);
+      for (Student student in students) {
+        final PresenceDTO dto = PresenceDTO.empty();
+
+        List<Presence> presence =
+            await _repository.findAllPresencesByStudentAndLesson(
+                student: student.id!, lesson: lesson);
+
+        dto.canInsertIntoPresencesList(presence: presence)
+            ? dtos.add(PresenceDTO.allArgs(
+                name: student.name, student: student.id, lesson: lesson))
+            : null;
+      }
+      dtoState.value = LoadedDTOState(dtos: dtos);
+    } catch (error) {
+      dtoState.value = ErrorDTOState(message: ConstantsUtil.message);
+    }
+  }
+
+  @override
+  Future<void> deletePresence(
+      {required int student,
+      required int lesson,
+      required int schoolClass}) async {
+    dtoState.value = LoadingDTOState();
+    try {
+      await _repository.deletePresenceByStudentAndLesson(
+          student: student, lesson: lesson);
+      findAllPresencesByLesson(lesson: lesson, schoolClass: schoolClass);
     } catch (error) {
       dtoState.value = ErrorDTOState(message: ConstantsUtil.message);
     }
