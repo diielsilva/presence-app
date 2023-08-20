@@ -31,6 +31,7 @@ class PresenceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Presence Application",
       routes: _routes(),
       theme: _getTheme(brightness: Brightness.light),
       darkTheme: _getTheme(brightness: Brightness.dark),
