@@ -140,7 +140,8 @@ class RepositoryImpl implements Repository {
   Future<List<Lesson>> findAllLessonsBySchoolClass(
       {required int schoolClass}) async {
     List<Map<String, dynamic>> rows = await _rawQuery(
-        sql: "SELECT * FROM Lesson WHERE school_class = $schoolClass ORDER BY date");
+        sql:
+            "SELECT * FROM Lesson WHERE school_class = $schoolClass ORDER BY date");
     return rows.map((row) => Lesson.fromMap(map: row)).toList(growable: false);
   }
 
@@ -187,5 +188,13 @@ class RepositoryImpl implements Repository {
   @override
   Future<void> deletePresencesByLesson({required int lesson}) async {
     await _rawDelete(sql: "DELETE FROM Presence WHERE lesson = $lesson");
+  }
+
+  @override
+  Future<void> deletePresenceByStudentAndLesson(
+      {required int student, required int lesson}) async {
+    await _rawDelete(
+        sql:
+            "DELETE FROM Presence WHERE student = $student AND lesson = $lesson");
   }
 }

@@ -35,4 +35,7 @@ abstract interface class Repository {
   Future<void> deletePresencesByStudent({required int student});
 
   Future<void> deletePresencesByLesson({required int lesson});
+
+  Future<void> deletePresenceByStudentAndLesson(
+      {required int student, required int lesson});
 }
