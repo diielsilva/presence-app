@@ -23,7 +23,7 @@ class _StudentsPageState extends State<StudentsPage> {
   void _handleOptionButton({required int option, required int student}) {
     switch (option) {
       case 0:
-        _displayForm(
+        _displayInsertOrUpdateForm(
             title: "Editar Aluno",
             isUpdate: true,
             label: "Editar",
@@ -49,7 +49,7 @@ class _StudentsPageState extends State<StudentsPage> {
     );
   }
 
-  Future<void> _displayForm({
+  Future<void> _displayInsertOrUpdateForm({
     required String title,
     required String label,
     required bool isUpdate,
@@ -185,7 +185,7 @@ class _StudentsPageState extends State<StudentsPage> {
         onPressed: () {
           _student =
               Student.allArgs(id: 0, name: "", schoolClass: _schoolClass);
-          _displayForm(
+          _displayInsertOrUpdateForm(
             title: "Cadastrar Aluno",
             isUpdate: false,
             label: "Cadastrar",

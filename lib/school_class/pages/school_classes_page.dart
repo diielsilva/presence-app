@@ -19,13 +19,6 @@ class SchoolClassesPage extends StatefulWidget {
 class _SchoolClassesPageState extends State<SchoolClassesPage> {
   late final SchoolClassStore _store;
 
-  void _onInit() {
-    _store = widget.store;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _store.findAllSchoolClasses();
-    });
-  }
-
   void _handleOptionButton(int option, int schoolClass) {
     switch (option) {
       case 0:
@@ -59,7 +52,10 @@ class _SchoolClassesPageState extends State<SchoolClassesPage> {
   @override
   void initState() {
     super.initState();
-    _onInit();
+    _store = widget.store;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _store.findAllSchoolClasses();
+    });
   }
 
   @override

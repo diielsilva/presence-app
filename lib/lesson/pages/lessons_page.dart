@@ -23,23 +23,15 @@ class _LessonsPageState extends State<LessonsPage> {
   late final LessonStore _store;
   late final int _schoolClass;
 
-  void _onInit() {
-    _store = widget.store;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _schoolClass = ModalRoute.of(context)!.settings.arguments as int;
-      _store.findAllLessonsBySchoolClass(schoolClass: _schoolClass);
-    });
-  }
-
   void _handleOptionButton({required int option, required int lesson}) {
     switch (option) {
       case 0:
-        _displayDTOS(
-            lesson: lesson, isPresences: false, title: "Atribuir Presenças");
+        _assignOrRemovePresences(
+            lesson: lesson, isAssignPresence: false, title: "Atribuir Presenças");
         break;
       case 1:
-        _displayDTOS(
-            lesson: lesson, isPresences: true, title: "Alunos Presentes");
+        _assignOrRemovePresences(
+            lesson: lesson, isAssignPresence: true, title: "Alunos Presentes");
       case 2:
         _store.deleteLesson(lesson: lesson, schoolClass: _schoolClass);
         break;
@@ -60,11 +52,11 @@ class _LessonsPageState extends State<LessonsPage> {
     );
   }
 
-  Future<void> _displayDTOS(
+  Future<void> _assignOrRemovePresences(
       {required int lesson,
-      required bool isPresences,
+      required bool isAssignPresence,
       required String title}) async {
-    isPresences
+    isAssignPresence
         ? _store.findAllPresencesByLesson(
             lesson: lesson, schoolClass: _schoolClass)
         : _store.findAllAbsencesByLesson(
@@ -92,7 +84,7 @@ class _LessonsPageState extends State<LessonsPage> {
                   return dtos.isEmpty
                       ? Center(
                           child: Text(
-                            isPresences
+                            isAssignPresence
                                 ? "Todos os alunos estão faltando ou não existem alunos cadastrados."
                                 : "Todos os alunos estão presentes ou não existem alunos cadastrados.",
                           ),
@@ -106,7 +98,7 @@ class _LessonsPageState extends State<LessonsPage> {
                             return ListTile(
                               title: Text(dto.name!),
                               trailing: IconButton(
-                                icon: isPresences
+                                icon: isAssignPresence
                                     ? const Icon(
                                         Icons.remove_circle,
                                         color: Colors.red,
@@ -116,7 +108,7 @@ class _LessonsPageState extends State<LessonsPage> {
                                         color: Colors.green,
                                       ),
                                 onPressed: () {
-                                  isPresences
+                                  isAssignPresence
                                       ? _store.deletePresence(
                                           student: dto.student!,
                                           lesson: dto.lesson!,
@@ -145,7 +137,11 @@ class _LessonsPageState extends State<LessonsPage> {
   @override
   void initState() {
     super.initState();
-    _onInit();
+    _store = widget.store;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _schoolClass = ModalRoute.of(context)!.settings.arguments as int;
+      _store.findAllLessonsBySchoolClass(schoolClass: _schoolClass);
+    });
   }
 
   @override
